@@ -1,37 +1,47 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Generator {
 	private HyperGraph graph = null;
 	
 	private final static int MAX_VERTEX = 10;
 	private final static int DELTA_EDGE = 2; 
+	private Set<Integer> fixedVertex;
+	
+	private Random r;
 	
 	Generator() {
+		fixedVertex = new HashSet<Integer> ();
+		r = new Random();
 		generate();
 	}
 	
 	// TODO: implement
 	public void generate() {
-		Random r = new Random();
+		fixedVertex.clear();
 		int v = r.nextInt(MAX_VERTEX)+2;
 		graph = new HyperGraph(v);
-		List<Integer> edge = new ArrayList<Integer>();
-		edge.add(r.nextInt(v));
-		edge.add(r.nextInt(v));
-		graph.addEdge(edge);
-		for (int i=0; i<v-2; i++) {
-			edge = new ArrayList<Integer>();
-			int e = r.nextInt(DELTA_EDGE)+2;
-			for (int j=0; j<e; j++) {
-				edge.add(r.nextInt(v));
-			}
-			graph.addEdge(edge);
+		while (graph.getMatrix().size() < v-1) {
+			fixedVertex.add(generateEdge());
 		}
 		System.gc();
+	}
+	
+	private int generateEdge() {
+		int k = Math.min(r.nextInt(DELTA_EDGE)+2, graph.getV()-fixedVertex.size());
+		List<Integer> edge = new ArrayList<Integer>();
+		while (edge.size()<k) {
+			int e = r.nextInt(graph.getV());
+			if (!edge.contains(e) && !fixedVertex.contains(e))
+				edge.add(e);
+		}
+		graph.addEdge(edge);
+		return edge.get(0);
 	}
 
 	public HyperGraph getGraph() {

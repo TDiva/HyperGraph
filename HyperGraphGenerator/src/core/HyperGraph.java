@@ -28,6 +28,10 @@ public class HyperGraph {
 	public void setV(int v) {
 		this.v = v;
 	}
+	
+	public int getR() {
+		return matrix.size();
+	}
 
 	// list = numbers of incident vertex
 	public void addEdge(List<Integer> list) {
@@ -63,5 +67,21 @@ public class HyperGraph {
 			}
 			System.out.println();
 		}
+	}
+	
+	public Integer[][] toArray() {
+		Integer[][] arr = new Integer[getR()][];
+		for (int i=0; i<getR(); i++) {
+			arr[i] = new Integer[v];
+		}
+		
+		for (int i=0; i<matrix.size(); i++) {
+			int row = matrix.get(i);
+			for (int j=0; j<v; j++,row/=2) {
+				arr[i][j] = row%2;
+			}
+		}
+		
+		return arr;
 	}
 }

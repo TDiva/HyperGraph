@@ -21,7 +21,6 @@ public class Generator {
 		generate();
 	}
 	
-	// TODO: implement
 	public void generate() {
 		fixedVertex.clear();
 		int v = r.nextInt(MAX_VERTEX)+2;

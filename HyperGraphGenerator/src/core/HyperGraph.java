@@ -7,6 +7,8 @@ public class HyperGraph {
 
 	List<Integer> matrix;
 	int v;
+	
+	List<SubGraph> subgraphs;
 
 	public HyperGraph(int v) {
 		matrix = new ArrayList<Integer>();
@@ -46,6 +48,10 @@ public class HyperGraph {
 		matrix.add(row);
 	}
 	
+	public void addEdge(int edge) {
+		matrix.add(edge);
+	}
+	
 	public void removeEdge(int index) {
 		matrix.remove(index);
 	}
@@ -83,5 +89,42 @@ public class HyperGraph {
 		}
 		
 		return arr;
+	}
+	
+	private boolean isEdgeBasedOnVertexs(int e, int v) {
+		for (; e>0; v/=2, e/=2) {
+			if (e%2 == 1 && v%2 == 0)
+				return false;
+		}
+		return true;
+	}
+	
+	private void generateSubgraphs(int v) {
+		List<Integer> edges = new ArrayList<Integer>();
+		for (Integer e: matrix) {
+			if (isEdgeBasedOnVertexs(e,v))
+				edges.add(e);
+		}
+		for (int e=0; e<Math.pow(2d, edges.size()); e++) {
+			SubGraph sub = new SubGraph(this.v,v);
+			for (int k=e, i=0;k>0; k/=2,i++) {
+				if (k%2 == 1) 
+					sub.addEdge(edges.get(i));
+			}
+			subgraphs.add(sub);
+		}
+	}
+	
+	private void generateSubGraphs() {
+		subgraphs = new ArrayList<SubGraph>();
+		for (int i=0; i<Math.pow(2d,v); i++) {
+			generateSubgraphs(i);
+		}
+	}
+	
+	public List<SubGraph> getSubGraphs() {
+		if (subgraphs==null)
+			generateSubGraphs();
+		return subgraphs;
 	}
 }

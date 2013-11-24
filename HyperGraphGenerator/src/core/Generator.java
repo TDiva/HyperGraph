@@ -9,7 +9,7 @@ import java.util.Set;
 public class Generator {
 	private HyperGraph graph = null;
 	
-	private final static int MAX_VERTEX = 10;
+	private final static int MAX_VERTEX = 6;
 	private final static int DELTA_EDGE = 2; 
 	private Set<Integer> fixedVertex;
 	

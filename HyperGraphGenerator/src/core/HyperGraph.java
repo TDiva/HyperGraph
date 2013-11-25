@@ -117,7 +117,7 @@ public class HyperGraph {
 	
 	private void generateSubGraphs() {
 		subgraphs = new ArrayList<SubGraph>();
-		for (int i=0; i<Math.pow(2d,v); i++) {
+		for (int i=1; i<Math.pow(2d,v); i++) {
 			generateSubgraphs(i);
 		}
 	}

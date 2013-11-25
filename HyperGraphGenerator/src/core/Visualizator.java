@@ -27,4 +27,14 @@ public class Visualizator {
 		matrix.doLayout();
 		return matrix;
 	}
+	
+	public static JTable fillMatrix(JTable matrix, ScreedGraph graph) {
+		String[] headers = new String[graph.getVertexs().size()];
+		for (int i=0; i<graph.getVertexs().size(); i++) {
+			headers[i] = "V-"+(graph.getVertexs().get(i)+1);
+		}
+		matrix.setModel(new DefaultTableModel(graph.toArray(), headers));
+		matrix.doLayout();
+		return matrix;
+	}
 }

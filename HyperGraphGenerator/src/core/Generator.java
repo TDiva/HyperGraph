@@ -11,12 +11,12 @@ public class Generator {
 	
 	private final static int MAX_VERTEX = 6;
 	private final static int DELTA_EDGE = 2; 
-	private Set<Integer> fixedVertex;
+	private List<Integer> fixedVertex;
 	
 	private Random r;
 	
 	Generator() {
-		fixedVertex = new HashSet<Integer> ();
+		fixedVertex = new ArrayList<Integer> ();
 		r = new Random();
 		generate();
 	}
@@ -24,23 +24,27 @@ public class Generator {
 	public void generate() {
 		fixedVertex.clear();
 		int v = r.nextInt(MAX_VERTEX)+2;
+		for (int i=0; i<v; i++)
+			fixedVertex.add(i);
 		graph = new HyperGraph(v);
-		while (graph.getMatrix().size() < v-1) {
-			fixedVertex.add(generateEdge());
+		int i;
+		for (i=0; i<v-1; i++) {
+			fixedVertex.remove(generateEdge());
 		}
 		System.gc();
 	}
 	
 	private int generateEdge() {
-		int k = Math.min(r.nextInt(DELTA_EDGE)+2, graph.getV()-fixedVertex.size());
+		int k = Math.min(r.nextInt(DELTA_EDGE)+2, fixedVertex.size());
 		List<Integer> edge = new ArrayList<Integer>();
+		int e = 0;
 		while (edge.size()<k) {
-			int e = r.nextInt(graph.getV());
-			if (!edge.contains(e) && !fixedVertex.contains(e))
-				edge.add(e);
+			e = r.nextInt(fixedVertex.size());
+			if (!edge.contains(fixedVertex.get(e)))
+				edge.add(fixedVertex.get(e));
 		}
 		graph.addEdge(edge);
-		return edge.get(0);
+		return e;
 	}
 
 	public HyperGraph getGraph() {

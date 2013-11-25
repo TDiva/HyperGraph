@@ -55,16 +55,17 @@ public class Application extends JFrame {
 		});
 		buttonPanel.add(subBtn);
 
-		JButton pullBtn = new JButton("SubGraphs");
-		pullBtn.addActionListener(new ActionListener() {
+		JButton screedBtn = new JButton("Screed Graphs");
+		screedBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO: pullGraph Dialog
+				ScreedGraphFrame frame = new ScreedGraphFrame(gen.getGraph());
+				frame.setVisible(true);
 			}
 
 		});
-		buttonPanel.add(pullBtn);
+		buttonPanel.add(screedBtn);
 
 		pack();
 	}

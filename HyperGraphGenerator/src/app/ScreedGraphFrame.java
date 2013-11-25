@@ -4,9 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -88,27 +87,23 @@ public class ScreedGraphFrame extends JFrame {
 		});
 		btnPanel.add(rightBtn);
 
+		list = new JList<String>();
+		JScrollPane scrl1 = new JScrollPane(list);
+		add(scrl1, BorderLayout.WEST);
 		setListOfCScreeds();
 
 		pack();
 	}
 
 	private void setListOfCScreeds() {
-		List<String> diffs = new ArrayList<String>();
+		DefaultListModel<String> model = new DefaultListModel<String>();
 		HyperGraph g = graph.getScreedGraphs().get(index);
 		while (g instanceof ScreedGraph) {
-			diffs.add(((ScreedGraph) g).getDiff());
+			model.addElement(((ScreedGraph) g).getDiff());
 			g = ((ScreedGraph) g).getParent();
 		}
-		String[] arr = new String[diffs.size()];
-		for (int i=0; i<diffs.size(); i++) {
-			arr[i] = diffs.get(i);
-		}
-		if (list != null)
-			remove(list);
-		list = new JList<String>(arr);
-		JScrollPane scrl = new JScrollPane(list);
-		add(scrl, BorderLayout.WEST);
+		list.setModel(model);
+		
 	}
 
 }

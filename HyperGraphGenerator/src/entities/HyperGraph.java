@@ -16,11 +16,11 @@ public class HyperGraph {
 		this.v = v;
 	}
 
-	List<Integer> getMatrix() {
+	public List<Integer> getMatrix() {
 		return matrix;
 	}
 
-	void setMatrix(List<Integer> matrix) {
+	 public void setMatrix(List<Integer> matrix) {
 		this.matrix = matrix;
 	}
 

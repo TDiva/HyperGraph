@@ -104,4 +104,17 @@ public class ScreedGraph extends HyperGraph {
 				matrix.containsAll(g.matrix) && g.matrix.containsAll(matrix));
 
 	}
+	
+	public String getDiff() {
+		Integer a = 0,b = 0;
+		if (parent instanceof ScreedGraph) {
+			a = ((ScreedGraph) parent).getVertexs().get(u1)+1;
+			b = ((ScreedGraph) parent).getVertexs().get(u2)+1;
+		} else {
+			a = u1+1;
+			b = u2+1;
+		}
+			
+		return a.toString()+" + "+b.toString() + " -> " + a.toString();
+	}
 }

@@ -1,21 +1,21 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
+
+import entities.HyperGraph;
 
 public class Generator {
 	private HyperGraph graph = null;
 	
-	private final static int MAX_VERTEX = 6;
+	private final static int MAX_VERTEX = 10;
 	private final static int DELTA_EDGE = 2; 
 	private List<Integer> fixedVertex;
 	
 	private Random r;
 	
-	Generator() {
+	public Generator() {
 		fixedVertex = new ArrayList<Integer> ();
 		r = new Random();
 		generate();

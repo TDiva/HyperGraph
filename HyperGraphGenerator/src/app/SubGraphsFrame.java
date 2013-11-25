@@ -1,4 +1,4 @@
-package core;
+package app;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicArrowButton;
+
+import core.Visualizator;
+import entities.HyperGraph;
 
 public class SubGraphsFrame extends JFrame {
 

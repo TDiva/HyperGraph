@@ -1,4 +1,4 @@
-package core;
+package app;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -10,7 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
+
+import core.Generator;
+import core.Visualizator;
 
 public class Application extends JFrame {
 	private static final long serialVersionUID = 1L;

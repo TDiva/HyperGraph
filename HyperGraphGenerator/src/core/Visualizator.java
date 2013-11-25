@@ -3,6 +3,10 @@ package core;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import entities.HyperGraph;
+import entities.ScreedGraph;
+import entities.SubGraph;
+
 public class Visualizator {
 	private static final int MAX_WIDTH = 700;
 	private static final int MAX_HEIGHT = 500;

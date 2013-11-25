@@ -38,14 +38,21 @@ public class SubGraphsFrame extends JFrame {
 		btnPanel.setLayout(new FlowLayout());
 		add(btnPanel,BorderLayout.SOUTH);
 		
-		BasicArrowButton leftBtn = new BasicArrowButton(BasicArrowButton.WEST);
+		final BasicArrowButton leftBtn = new BasicArrowButton(BasicArrowButton.WEST);
+		final BasicArrowButton rightBtn = new BasicArrowButton(BasicArrowButton.EAST);
+		leftBtn.setEnabled(index > 0);
+		rightBtn.setEnabled(index < graph.getSubGraphs().size()-1);
+		
 		leftBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Visualizator.fillMatrix(matrix, graph.getSubGraphs().get(++index));
+				Visualizator.fillMatrix(matrix, graph.getSubGraphs().get(--index));
 				indexLabel.setText(String.format("%d", index));
+				leftBtn.setEnabled(index > 0);
+				rightBtn.setEnabled(index < graph.getSubGraphs().size()-1);
 			}
+			
 			
 		});
 		btnPanel.add(leftBtn);
@@ -53,14 +60,14 @@ public class SubGraphsFrame extends JFrame {
 		indexLabel = new JLabel("0");
 		btnPanel.add(indexLabel);
 		
-		BasicArrowButton rightBtn = new BasicArrowButton(BasicArrowButton.EAST);
 		rightBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Visualizator.fillMatrix(matrix, graph.getSubGraphs().get(++index));
 				indexLabel.setText(String.format("%d", index));
-				
+				leftBtn.setEnabled(index > 0);
+				rightBtn.setEnabled(index < graph.getSubGraphs().size()-1);
 			}
 			
 		});

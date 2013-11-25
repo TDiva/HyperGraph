@@ -5,10 +5,11 @@ import java.util.List;
 
 public class HyperGraph {
 
-	List<Integer> matrix;
-	int v;
+	protected List<Integer> matrix;
+	protected int v;
 	
-	List<SubGraph> subgraphs;
+	private List<SubGraph> subgraphs;
+	private List<ScreedGraph> screedGraphs;
 
 	public HyperGraph(int v) {
 		matrix = new ArrayList<Integer>();
@@ -126,5 +127,34 @@ public class HyperGraph {
 		if (subgraphs==null)
 			generateSubGraphs();
 		return subgraphs;
+	}
+	
+	protected boolean isDoubleEdge(int k) {
+		int edge = matrix.get(k);
+		int count = 0;
+		for (int i=edge; i>0; i/=2) {
+			count+=i%2;
+		}
+		return (count == 2);
+	}
+	
+	protected void generateScreedGraphs() {
+		screedGraphs = new ArrayList<ScreedGraph>();
+		for (int i=1; i<matrix.size(); i++) {
+			if (isDoubleEdge(i)) {
+				ScreedGraph g = new ScreedGraph(this,i);
+				HyperGraph root = this;
+				while (this instanceof ScreedGraph)
+					root = ((ScreedGraph) root).getParent();
+				root.getScreedGraphs().add(g);
+				g.getScreedGraphs();
+			}
+		}
+	}
+	
+	public List<ScreedGraph> getScreedGraphs() {
+		if (screedGraphs==null)
+			generateScreedGraphs();
+		return screedGraphs;
 	}
 }

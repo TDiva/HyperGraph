@@ -7,8 +7,8 @@ import java.util.List;
 public class ScreedGraph extends HyperGraph {
 	
 	private HyperGraph parent;
-	int u;
-	int v;
+	private int u;
+	private int v;
 
 	public ScreedGraph(HyperGraph parent, int k) {
 		super(parent.getV()-1);

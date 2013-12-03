@@ -67,11 +67,13 @@ public class Visualizator {
 	}
 
 	private static void drawEdge(Graphics g, List<Point> points, int edge,
-			int index) {
+			int index, int v) {
 		List<Integer> row = new ArrayList<Integer>();
 		for (int i = 0; i < points.size(); i++, edge /= 2) {
 			row.add(edge % 2);
 		}
+
+		double du = 2 * Math.PI / v;
 
 		g.setColor(colors[index]);
 		int prev = -1;
@@ -82,8 +84,9 @@ public class Visualizator {
 					first = i;
 					prev = i;
 				} else {
-					g.drawLine(points.get(prev).x, points.get(prev).y,
-							points.get(i).x, points.get(i).y);
+					g.drawLine(points.get(prev).x + index, points.get(prev).y
+							+ index, points.get(i).x + index, points.get(i).y
+							+ index);
 					prev = i;
 				}
 			}
@@ -103,9 +106,8 @@ public class Visualizator {
 		g.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
 		g.setColor(Color.BLACK);
 		List<Point> points = drawVertexs(graph, g, x0, y0);
-
 		for (int i = 0; i < graph.getMatrix().size(); i++) {
-			drawEdge(g, points, graph.getMatrix().get(i), i);
+			drawEdge(g, points, graph.getMatrix().get(i), i, graph.getV());
 		}
 
 		return new ImageIcon(img);
@@ -118,21 +120,21 @@ public class Visualizator {
 
 		if (graph instanceof SubGraph) {
 			SubGraph sgraph = (SubGraph) graph;
-			double du = 2 * Math.PI / sgraph.getVertexs().size();
+			double du = 2 * Math.PI / sgraph.getV();
 
-			for (int i = 0; i < sgraph.getVertexs().size(); i++) {
-				int x = (int) (x0 + r
-						* Math.cos(sgraph.getVertexs().get(i) * du));
-				int y = (int) (y0 - r
-						* Math.sin(sgraph.getVertexs().get(i) * du));
-				points.add(new Point(x, y));
-				g.fillOval(x - 5, y - 5, 10, 10);
-				x = (int) (x0 + (r + 30)
-						* Math.cos(sgraph.getVertexs().get(i) * du));
-				y = (int) (y0 - (r + 30)
-						* Math.sin(sgraph.getVertexs().get(i) * du));
-				g.drawString("V-"
-						+ (((SubGraph) graph).getVertexs().get(i) + 1), x, y);
+			for (int i = 0; i < sgraph.getV(); i++) {
+				if (sgraph.getVertexs().contains(i)) {
+					int x = (int) (x0 + r * Math.cos(i * du));
+					int y = (int) (y0 - r * Math.sin(i * du));
+					points.add(new Point(x, y));
+					g.fillOval(x - 5, y - 5, 10, 10);
+					x = (int) (x0 + (r + 30) * Math.cos(i * du));
+					y = (int) (y0 - (r + 30) * Math.sin(i * du));
+					g.drawString((new Integer(i+1).toString()), x,
+							y);
+				} else {
+					points.add(new Point(x0,y0));
+				}
 			}
 		} else if (graph instanceof ScreedGraph) {
 

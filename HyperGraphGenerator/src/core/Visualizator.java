@@ -15,7 +15,7 @@ public class Visualizator {
 	public static JTable fillMatrix(JTable matrix, HyperGraph graph) {
 		String[] headers = new String[graph.getV()];
 		for (int i=0; i<graph.getV(); i++) {
-			headers[i] = "V-"+(i+1);
+			headers[i] = (new Integer(i+1)).toString();
 		}
 		matrix.setModel(new DefaultTableModel(graph.toArray(), headers));
 		matrix.doLayout();
@@ -25,7 +25,7 @@ public class Visualizator {
 	public static JTable fillMatrix(JTable matrix, SubGraph graph) {
 		String[] headers = new String[graph.getVertexs().size()];
 		for (int i=0; i<graph.getVertexs().size(); i++) {
-			headers[i] = "V-"+(graph.getVertexs().get(i)+1);
+			headers[i] = (new Integer(graph.getVertexs().get(i)+1)).toString();
 		}
 		matrix.setModel(new DefaultTableModel(graph.toArray(), headers));
 		matrix.doLayout();
@@ -35,7 +35,7 @@ public class Visualizator {
 	public static JTable fillMatrix(JTable matrix, ScreedGraph graph) {
 		String[] headers = new String[graph.getVertexs().size()];
 		for (int i=0; i<graph.getVertexs().size(); i++) {
-			headers[i] = "V-"+(graph.getVertexs().get(i)+1);
+			headers[i] =(new Integer(graph.getVertexs().get(i)+1)).toString();
 		}
 		matrix.setModel(new DefaultTableModel(graph.toArray(), headers));
 		matrix.doLayout();

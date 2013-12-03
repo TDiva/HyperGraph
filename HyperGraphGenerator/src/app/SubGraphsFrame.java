@@ -19,7 +19,7 @@ public class SubGraphsFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	//JLabel img;
+	JLabel img;
 	
 	JTable matrix;
 	
@@ -29,8 +29,6 @@ public class SubGraphsFrame extends JFrame {
 	public SubGraphsFrame(final HyperGraph graph) {
 		index = 0;
 		setLayout(new BorderLayout());
-//		img = new JLabel("Hello!");
-//		add(img,BorderLayout.CENTER);
 		
 		matrix = new JTable();
 		JScrollPane scrl = new JScrollPane(matrix);
@@ -54,6 +52,7 @@ public class SubGraphsFrame extends JFrame {
 				indexLabel.setText(String.format("%d", index));
 				leftBtn.setEnabled(index > 0);
 				rightBtn.setEnabled(index < graph.getSubGraphs().size()-1);
+				img.setIcon(Visualizator.createImage(graph.getSubGraphs().get(index)));
 			}
 			
 			
@@ -71,10 +70,16 @@ public class SubGraphsFrame extends JFrame {
 				indexLabel.setText(String.format("%d", index));
 				leftBtn.setEnabled(index > 0);
 				rightBtn.setEnabled(index < graph.getSubGraphs().size()-1);
+				img.setIcon(Visualizator.createImage(graph.getSubGraphs().get(index)));
 			}
 			
 		});
 		btnPanel.add(rightBtn);
+		
+		img = new JLabel();
+		img.setIcon(Visualizator.createImage(graph.getSubGraphs().get(index)));
+		add(img, BorderLayout.EAST);
+
 		
 		pack();
 	}

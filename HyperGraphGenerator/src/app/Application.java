@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,6 +21,7 @@ public class Application extends JFrame {
 	Generator gen;
 
 	JTable matrix;
+	JLabel img;
 
 	public Application() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,6 +42,7 @@ public class Application extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				gen.generate();
 				Visualizator.fillMatrix(matrix, gen.getGraph());
+				img.setIcon(Visualizator.createImage(gen.getGraph()));
 			}
 
 		});
@@ -68,6 +71,10 @@ public class Application extends JFrame {
 
 		});
 		buttonPanel.add(screedBtn);
+
+		img = new JLabel();
+		img.setIcon(Visualizator.createImage(gen.getGraph()));
+		add(img, BorderLayout.EAST);
 
 		pack();
 	}

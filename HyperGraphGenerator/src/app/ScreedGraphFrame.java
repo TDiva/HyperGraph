@@ -23,7 +23,7 @@ public class ScreedGraphFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	HyperGraph graph;
 
-	// JLabel img;
+	JLabel img;
 
 	JTable matrix;
 	JList<String> list;
@@ -64,6 +64,7 @@ public class ScreedGraphFrame extends JFrame {
 				leftBtn.setEnabled(index > 0);
 				rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
 				setListOfCScreeds();
+				img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
 			}
 
 		});
@@ -82,6 +83,7 @@ public class ScreedGraphFrame extends JFrame {
 				leftBtn.setEnabled(index > 0);
 				rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
 				setListOfCScreeds();
+				img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
 			}
 
 		});
@@ -91,6 +93,10 @@ public class ScreedGraphFrame extends JFrame {
 		JScrollPane scrl1 = new JScrollPane(list);
 		add(scrl1, BorderLayout.WEST);
 		setListOfCScreeds();
+		
+		img = new JLabel();
+		img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
+		add(img, BorderLayout.EAST);
 
 		pack();
 	}

@@ -212,8 +212,9 @@ public class Visualizator {
 				int y = (int) (y0 - r * Math.sin(i * du));
 				points.add(new Point(x, y));
 				g.fillOval(x - 5, y - 5, 10, 10);
-				x = (int) (x0 + (r + 30) * Math.cos(i * du));
-				y = (int) (y0 - (r + 30) * Math.sin(i * du));
+				int delta = ((ScreedGraph) graph).getVertexsName(i).length()*5;
+				x = (int) (x0 + (r + delta+10) * Math.cos(i * du));
+				y = (int) (y0 - (r + delta+10) * Math.sin(i * du));
 				g.drawString(((ScreedGraph) graph).getVertexsName(i), x, y);
 			}
 

@@ -35,7 +35,7 @@ public class Visualizator {
 	public static JTable fillMatrix(JTable matrix, ScreedGraph graph) {
 		String[] headers = new String[graph.getVertexs().size()];
 		for (int i=0; i<graph.getVertexs().size(); i++) {
-			headers[i] =(new Integer(graph.getVertexs().get(i)+1)).toString();
+			headers[i] =graph.getVertexsName(i);
 		}
 		matrix.setModel(new DefaultTableModel(graph.toArray(), headers));
 		matrix.doLayout();

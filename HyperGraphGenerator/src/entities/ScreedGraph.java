@@ -1,7 +1,9 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ScreedGraph extends HyperGraph {
 
@@ -9,7 +11,7 @@ public class ScreedGraph extends HyperGraph {
 	private int u1;
 	private int u2;
 
-	List<Integer> vertexs;
+	List<Set<Integer>> vertexs;
 
 	public ScreedGraph(HyperGraph parent, int k) {
 		super(parent.v - 1);
@@ -38,15 +40,20 @@ public class ScreedGraph extends HyperGraph {
 				addEdge(row);
 		}
 
+		vertexs = new ArrayList<Set<Integer>>();
 		if (parent instanceof ScreedGraph) {
-			vertexs = new ArrayList<Integer>(((ScreedGraph) parent).vertexs);
+			for (Set<Integer> item : ((ScreedGraph) parent).vertexs)
+				vertexs.add(new HashSet<Integer>(item));
 		} else {
-			vertexs = new ArrayList<Integer>();
 			for (int i = 0; i < parent.v; i++) {
-				vertexs.add(i);
+				Set<Integer> row = new HashSet<Integer>();
+				row.add(i + 1);
+				vertexs.add(row);
 			}
 		}
+		Set<Integer> removed = vertexs.get(u2);
 		vertexs.remove(u2);
+		vertexs.get(u1).addAll(removed);
 	}
 
 	public HyperGraph getParent() {
@@ -73,12 +80,22 @@ public class ScreedGraph extends HyperGraph {
 		this.u2 = u2;
 	}
 
-	public List<Integer> getVertexs() {
+	public List<Set<Integer>> getVertexs() {
 		return vertexs;
 	}
 
-	public void setVertexs(List<Integer> vertexs) {
+	public void setVertexs(List<Set<Integer>> vertexs) {
 		this.vertexs = vertexs;
+	}
+
+	public String getVertexsName(int index) {
+		Set<Integer> screeds = vertexs.get(index);
+		StringBuffer name = new StringBuffer();
+		for (Integer item : screeds) {
+			name.append(item.toString() + ", ");
+		}
+		name.delete(name.length() - 2, name.length());
+		return name.toString();
 	}
 
 	private void getBorders(int edge) {
@@ -99,22 +116,23 @@ public class ScreedGraph extends HyperGraph {
 		if (!(o instanceof ScreedGraph))
 			return false;
 		ScreedGraph g = (ScreedGraph) o;
-		return (v == g.v && 
-				vertexs.containsAll(g.vertexs) && g.vertexs.containsAll(vertexs) &&
-				matrix.containsAll(g.matrix) && g.matrix.containsAll(matrix));
+
+		return (v == g.v && vertexs.containsAll(g.vertexs)
+				&& g.vertexs.containsAll(vertexs)
+				&& matrix.containsAll(g.matrix) && g.matrix.containsAll(matrix));
 
 	}
-	
+
 	public String getDiff() {
-		Integer a = 0,b = 0;
 		if (parent instanceof ScreedGraph) {
-			a = ((ScreedGraph) parent).getVertexs().get(u1)+1;
-			b = ((ScreedGraph) parent).getVertexs().get(u2)+1;
+			return ((ScreedGraph) parent).getVertexsName(u1) + " + "
+					+ ((ScreedGraph) parent).getVertexsName(u2) + " = "
+					+ getVertexsName(u1);
 		} else {
-			a = u1+1;
-			b = u2+1;
+			return (new Integer(u1 + 1)).toString() + " + "
+					+ (new Integer(u2 + 1)).toString() + " -> "
+					+ getVertexsName(u1);
 		}
-			
-		return a.toString()+" + "+b.toString() + " -> " + a.toString();
+
 	}
 }

@@ -110,6 +110,48 @@ public class Visualizator {
 				int x = x2 + l * (y2 - y1) / d;
 				int y = y2 - l * (x2 - x1) / d;
 				g2.drawLine(x, y, x - dx, y - dy);
+			}
+			row.add(row.get(1));
+			for (int i = 0; i < row.size() - 2; i++) {
+				int x1 = (int) (x0 + r * Math.cos(row.get(i) * du));
+				int y1 = (int) (y0 - r * Math.sin(row.get(i) * du));
+				int x2 = (int) (x0 + r * Math.cos(row.get(i + 1) * du));
+				int y2 = (int) (y0 - r * Math.sin(row.get(i + 1) * du));
+				int x3 = (int) (x0 + r * Math.cos(row.get(i + 2) * du));
+				int y3 = (int) (y0 - r * Math.sin(row.get(i + 2) * du));
+
+				int d1 = (int) Math.sqrt(Math.pow(x2 - x1, 2d)
+						+ Math.pow(y2 - y1, 2d));
+				int d2 = (int) Math.sqrt(Math.pow(x3 - x2, 2d)
+						+ Math.pow(y3 - y2, 2d));
+
+				int ax = x1 + l * (y1 - y2) / d1 + (x2 - x1);
+				int ay = y1 - l * (x1 - x2) / d1 + (y2 - y1);
+				int bx = x2 + l * (y2 - y3) / d2;
+				int by = y2 - l * (x2 - x3) / d2;
+
+				double u1 = Math.acos(Math.abs((double) (ax - x2) / l)) * 360
+						/ (2 * Math.PI);
+				double u2 = Math.acos(Math.abs((double) (bx - x2) / l)) * 360
+						/ (2 * Math.PI);
+				if (ax - x2 < 0) {
+					u1 = 180 - u1;
+				}
+				if (ay - y2 > 0) {
+					u1 = 360 - u1;
+				}
+				if (bx - x2 < 0) {
+					u2 = 180 - u2;
+				}
+				if ((by - y2) > 0) {
+					u2 = 360 - u2;
+				}
+				if (u2 < u1) {
+					u2 += 360;
+				}
+
+				g2.drawArc(x2 - l, y2 - l, 2 * l, 2 * l, (int) u1,
+						(int) (u2 - u1));
 
 			}
 		}

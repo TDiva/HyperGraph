@@ -1,7 +1,9 @@
 package core;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -66,33 +68,52 @@ public class Visualizator {
 		return matrix;
 	}
 
-	private static void drawEdge(Graphics g, List<Point> points, int edge,
-			int index, int v) {
+	private static void drawEdge(Graphics g, int edge, int index, int v) {
 		List<Integer> row = new ArrayList<Integer>();
-		for (int i = 0; i < points.size(); i++, edge /= 2) {
-			row.add(edge % 2);
-		}
-
-		double du = 2 * Math.PI / v;
-
-		g.setColor(colors[index]);
-		int prev = -1;
-		int first = -1;
-		for (int i = 0; i < row.size(); i++) {
-			if (row.get(i) == 1) {
-				if (prev == -1) {
-					first = i;
-					prev = i;
-				} else {
-					g.drawLine(points.get(prev).x + index, points.get(prev).y
-							+ index, points.get(i).x + index, points.get(i).y
-							+ index);
-					prev = i;
-				}
+		int deg = 0;
+		for (int i = 0; i < v; i++, edge /= 2) {
+			if (edge % 2 == 1) {
+				deg++;
+				row.add(i);
 			}
 		}
-		g.drawLine(points.get(first).x, points.get(first).y,
-				points.get(prev).x, points.get(prev).y);
+		row.add(row.get(0));
+
+		int x0 = MAX_WIDTH / 2;
+		int y0 = MAX_HEIGHT / 2;
+		int r = (int) (Math.min(MAX_HEIGHT, MAX_WIDTH) / 2.5);
+		int l = 5 + 2 * index;
+		double du = 2 * Math.PI / v;
+
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(colors[index]);
+		g2.setStroke(new BasicStroke(2));
+
+		if (deg == 2) {
+			int x2 = (int) (x0 + r * Math.cos(row.get(0) * du));
+			int y2 = (int) (y0 - r * Math.sin(row.get(0) * du));
+			int x1 = (int) (x0 + r * Math.cos(row.get(1) * du));
+			int y1 = (int) (y0 - r * Math.sin(row.get(1) * du));
+			g2.drawLine(x1, y1, x2, y2);
+		} else {
+			for (int i = 0; i < row.size() - 1; i++) {
+				int x2 = (int) (x0 + r * Math.cos(row.get(i) * du));
+				int y2 = (int) (y0 - r * Math.sin(row.get(i) * du));
+				int x1 = (int) (x0 + r * Math.cos(row.get(i + 1) * du));
+				int y1 = (int) (y0 - r * Math.sin(row.get(i + 1) * du));
+
+				int d = (int) Math.sqrt(Math.pow(x2 - x1, 2d)
+						+ Math.pow(y2 - y1, 2d));
+				int dx = x2 - x1;
+				int dy = y2 - y1;
+
+				int x = x2 + l * (y2 - y1) / d;
+				int y = y2 - l * (x2 - x1) / d;
+				g2.drawLine(x, y, x - dx, y - dy);
+
+			}
+		}
+
 	}
 
 	public static ImageIcon createImage(HyperGraph graph) {
@@ -105,11 +126,12 @@ public class Visualizator {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
 		g.setColor(Color.BLACK);
-		List<Point> points = drawVertexs(graph, g, x0, y0);
+		drawVertexs(graph, g, x0, y0);
 		for (int i = 0; i < graph.getMatrix().size(); i++) {
-			drawEdge(g, points, graph.getMatrix().get(i), i, graph.getV());
+			drawEdge(g, graph.getMatrix().get(i), i, graph.getV());
 		}
 
+		g.dispose();
 		return new ImageIcon(img);
 	}
 
@@ -130,10 +152,9 @@ public class Visualizator {
 					g.fillOval(x - 5, y - 5, 10, 10);
 					x = (int) (x0 + (r + 30) * Math.cos(i * du));
 					y = (int) (y0 - (r + 30) * Math.sin(i * du));
-					g.drawString((new Integer(i+1).toString()), x,
-							y);
+					g.drawString((new Integer(i + 1).toString()), x, y);
 				} else {
-					points.add(new Point(x0,y0));
+					points.add(new Point(x0, y0));
 				}
 			}
 		} else if (graph instanceof ScreedGraph) {

@@ -18,98 +18,104 @@ import core.Visualizator;
 import entities.HyperGraph;
 import entities.ScreedGraph;
 
+/*
+ * Окно стяжек графа
+ */
 public class ScreedGraphFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	HyperGraph graph;
+    private static final long serialVersionUID = 1L;
+    HyperGraph graph;
 
-	JLabel img;
+    JLabel img;
 
-	JTable matrix;
-	JList<String> list;
+    JTable matrix;
+    JList<String> list;
 
-	JLabel indexLabel;
-	int index;
+    JLabel indexLabel;
+    int index;
 
-	public ScreedGraphFrame(final HyperGraph graph) {
-		this.graph = graph;
-		index = 0;
-		setLayout(new BorderLayout());
-		// img = new JLabel("Hello!");
-		// add(img,BorderLayout.CENTER);
+    public ScreedGraphFrame(final HyperGraph graph) {
+        // начнем с первой стяжки графа
+        this.graph = graph;
+        index = 0;
+        setLayout(new BorderLayout());
 
-		matrix = new JTable();
-		JScrollPane scrl = new JScrollPane(matrix);
-		add(scrl, BorderLayout.CENTER);
-		Visualizator.fillMatrix(matrix, graph.getScreedGraphs().get(0));
+        // отрисовываем подграф в виде таблицы
+        matrix = new JTable();
+        JScrollPane scrl = new JScrollPane(matrix);
+        add(scrl, BorderLayout.CENTER);
+        Visualizator.fillMatrix(matrix, graph.getScreedGraphs().get(0));
 
-		JPanel btnPanel = new JPanel();
-		btnPanel.setLayout(new FlowLayout());
-		add(btnPanel, BorderLayout.SOUTH);
+        // создадим панель с кнопками
+        JPanel btnPanel = new JPanel();
+        btnPanel.setLayout(new FlowLayout());
+        add(btnPanel, BorderLayout.SOUTH);
 
-		final BasicArrowButton leftBtn = new BasicArrowButton(
-				BasicArrowButton.WEST);
-		final BasicArrowButton rightBtn = new BasicArrowButton(
-				BasicArrowButton.EAST);
-		leftBtn.setEnabled(index > 0);
-		rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
+        // кнопки "вправо" и "влево"
+        final BasicArrowButton leftBtn = new BasicArrowButton(BasicArrowButton.WEST);
+        final BasicArrowButton rightBtn = new BasicArrowButton(BasicArrowButton.EAST);
 
-		leftBtn.addActionListener(new ActionListener() {
+        // проверка, можно ли переместиться вправо и влево
+        leftBtn.setEnabled(index > 0);
+        rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Visualizator.fillMatrix(matrix,
-						graph.getScreedGraphs().get(--index));
-				indexLabel.setText(String.format("%d", index));
-				leftBtn.setEnabled(index > 0);
-				rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
-				setListOfCScreeds();
-				img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
-			}
+        // обработка нажатий кнопок
+        leftBtn.addActionListener(new ActionListener() {
 
-		});
-		btnPanel.add(leftBtn);
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                Visualizator.fillMatrix(matrix, graph.getScreedGraphs().get(--index));
+                indexLabel.setText(String.format("%d", index));
+                leftBtn.setEnabled(index > 0);
+                rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
+                setListOfCScreeds();
+                img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
+            }
 
-		indexLabel = new JLabel("0");
-		btnPanel.add(indexLabel);
+        });
+        btnPanel.add(leftBtn);
 
-		rightBtn.addActionListener(new ActionListener() {
+        indexLabel = new JLabel("0");
+        btnPanel.add(indexLabel);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Visualizator.fillMatrix(matrix,
-						graph.getScreedGraphs().get(++index));
-				indexLabel.setText(String.format("%d", index));
-				leftBtn.setEnabled(index > 0);
-				rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
-				setListOfCScreeds();
-				img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
-			}
+        rightBtn.addActionListener(new ActionListener() {
 
-		});
-		btnPanel.add(rightBtn);
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                Visualizator.fillMatrix(matrix, graph.getScreedGraphs().get(++index));
+                indexLabel.setText(String.format("%d", index));
+                leftBtn.setEnabled(index > 0);
+                rightBtn.setEnabled(index < graph.getScreedGraphs().size() - 1);
+                setListOfCScreeds();
+                img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
+            }
 
-		list = new JList<String>();
-		JScrollPane scrl1 = new JScrollPane(list);
-		add(scrl1, BorderLayout.WEST);
-		setListOfCScreeds();
-		
-		img = new JLabel();
-		img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
-		add(img, BorderLayout.EAST);
+        });
+        btnPanel.add(rightBtn);
 
-		pack();
-	}
+        // создание списка стяжек
+        list = new JList<String>();
+        JScrollPane scrl1 = new JScrollPane(list);
+        add(scrl1, BorderLayout.WEST);
+        setListOfCScreeds();
 
-	private void setListOfCScreeds() {
-		DefaultListModel<String> model = new DefaultListModel<String>();
-		HyperGraph g = graph.getScreedGraphs().get(index);
-		while (g instanceof ScreedGraph) {
-			model.addElement(((ScreedGraph) g).getDiff());
-			g = ((ScreedGraph) g).getParent();
-		}
-		list.setModel(model);
-		
-	}
+        // загрузка отрисованного графа
+        img = new JLabel();
+        img.setIcon(Visualizator.createImage(graph.getScreedGraphs().get(index)));
+        add(img, BorderLayout.EAST);
+
+        pack();
+    }
+
+    // создает список стяжек и загружает его в соответствующую компоненту
+    private void setListOfCScreeds() {
+        DefaultListModel<String> model = new DefaultListModel<String>();
+        HyperGraph g = graph.getScreedGraphs().get(index);
+        while (g instanceof ScreedGraph) {
+            model.addElement(((ScreedGraph) g).getDiff());
+            g = ((ScreedGraph) g).getParent();
+        }
+        list.setModel(model);
+    }
 
 }

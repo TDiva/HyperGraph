@@ -15,73 +15,87 @@ import javax.swing.JTable;
 import core.Generator;
 import core.Visualizator;
 
+/* Основной класс приложения
+ * Наследуется от JFrame, то есть представляет собой основное окно приложения.
+ * 
+ */
 public class Application extends JFrame {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	Generator gen;
+    Generator gen;
 
-	JTable matrix;
-	JLabel img;
+    JTable matrix;
+    JLabel img;
 
-	public Application() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gen = new Generator();
-		matrix = new JTable();
-		setLayout(new BorderLayout());
-		Visualizator.fillMatrix(matrix, gen.getGraph());
-		JScrollPane scrl = new JScrollPane(matrix);
-		add(scrl, BorderLayout.CENTER);
+    // конструктор, в нем создается основное окно и запускается генерация
+    public Application() {
+        // пусть приложение завершает работу, если окно закрыли.
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel buttonPanel = new JPanel(new FlowLayout());
-		add(buttonPanel, BorderLayout.SOUTH);
+        // генерируем граф и рисуем его в виде таблицы
+        gen = new Generator();
+        matrix = new JTable();
+        setLayout(new BorderLayout());
+        Visualizator.fillMatrix(matrix, gen.getGraph());
+        JScrollPane scrl = new JScrollPane(matrix);
+        add(scrl, BorderLayout.CENTER);
 
-		JButton genBtn = new JButton("Generate");
-		genBtn.addActionListener(new ActionListener() {
+        // создаем панель с кнопками
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        add(buttonPanel, BorderLayout.SOUTH);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				gen.generate();
-				Visualizator.fillMatrix(matrix, gen.getGraph());
-				img.setIcon(Visualizator.createImage(gen.getGraph()));
-			}
+        JButton genBtn = new JButton("Generate");
+        genBtn.addActionListener(new ActionListener() {
 
-		});
-		buttonPanel.add(genBtn);
+            // по нажатию кнопки будет запускаться перегенерация графа
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                gen.generate();
+                Visualizator.fillMatrix(matrix, gen.getGraph());
+                img.setIcon(Visualizator.createImage(gen.getGraph()));
+            }
 
-		JButton subBtn = new JButton("SubGraphs");
-		subBtn.addActionListener(new ActionListener() {
+        });
+        buttonPanel.add(genBtn);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				SubGraphsFrame frame = new SubGraphsFrame(gen.getGraph());
-				frame.setVisible(true);
-			}
+        JButton subBtn = new JButton("SubGraphs");
+        subBtn.addActionListener(new ActionListener() {
 
-		});
-		buttonPanel.add(subBtn);
+            // по нажатию кнопки будет открываться окно подграфов
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                SubGraphsFrame frame = new SubGraphsFrame(gen.getGraph());
+                frame.setVisible(true);
+            }
 
-		JButton screedBtn = new JButton("Screed Graphs");
-		screedBtn.addActionListener(new ActionListener() {
+        });
+        buttonPanel.add(subBtn);
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				ScreedGraphFrame frame = new ScreedGraphFrame(gen.getGraph());
-				frame.setVisible(true);
-			}
+        JButton screedBtn = new JButton("Screed Graphs");
+        screedBtn.addActionListener(new ActionListener() {
 
-		});
-		buttonPanel.add(screedBtn);
+            // по нажатию кнопки будет открываться окно стяжек
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                ScreedGraphFrame frame = new ScreedGraphFrame(gen.getGraph());
+                frame.setVisible(true);
+            }
 
-		img = new JLabel();
-		img.setIcon(Visualizator.createImage(gen.getGraph()));
-		add(img, BorderLayout.EAST);
+        });
+        buttonPanel.add(screedBtn);
 
-		pack();
-	}
+        // загрузим в правую часть окна сгенерированное изображение графа
+        img = new JLabel();
+        img.setIcon(Visualizator.createImage(gen.getGraph()));
+        add(img, BorderLayout.EAST);
 
-	public static void main(String[] args) {
-		Application app = new Application();
-		app.setVisible(true);
-	}
+        pack();
+    }
+
+    // точка входа программы. Создает окно и показывает его на экране
+    public static void main(String[] args) {
+        Application app = new Application();
+        app.setVisible(true);
+    }
 
 }

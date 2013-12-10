@@ -22,12 +22,14 @@ import entities.SubGraph;
  */
 public class Visualizator {
     // будем считать, что это размеры окна, доступного для рисования
-    private static final int MAX_WIDTH = 700;
+    private static final int MAX_WIDTH = 500;
     private static final int MAX_HEIGHT = 500;
 
     // а это цвета ребер, чтобы удобнее было рисовать
     public static Color[] colors = new Color[] { Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GREEN,
-            Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW };
+            Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.YELLOW, Color.BLUE, Color.CYAN,
+            Color.DARK_GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED,
+            Color.YELLOW };
 
     // класс "точка", для удобство рисования
     public static class Point {
@@ -245,7 +247,7 @@ public class Visualizator {
                 drawPoint(g, x0, y0, r, points, du, i);
                 x = (int) (x0 + (r + 30) * Math.cos(i * du));
                 y = (int) (y0 - (r + 30) * Math.sin(i * du));
-                g.drawString("V-" + (i + 1), x, y);
+                g.drawString(new Integer(i + 1).toString(), x, y);
             }
         }
         return points;

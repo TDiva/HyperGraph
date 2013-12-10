@@ -23,14 +23,12 @@ public class Generator {
     public Generator() {
         fixedVertex = new ArrayList<Integer>();
         r = new Random();
-        generate();
     }
 
     // создаем случайный гиперграф
-    public void generate() {
+    
+    public void generate(int v) {
         fixedVertex.clear();
-        // выбираем случайное число вершин
-        int v = r.nextInt(MAX_VERTEX) + 2;
         // делаем все вершины доступными
         for (int i = 0; i < v; i++)
             fixedVertex.add(i);

@@ -1,9 +1,12 @@
 package app;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import core.Generator;
 import core.Visualizator;
@@ -27,6 +31,8 @@ public class Application extends JFrame {
     JTable matrix;
     JLabel img;
 
+    private static Integer DEFAULT_NUMBER_OF_VERTEXS = 5;
+
     // конструктор, в нем создается основное окно и запускается генерация
     public Application() {
         // пусть приложение завершает работу, если окно закрыли.
@@ -36,6 +42,7 @@ public class Application extends JFrame {
         gen = new Generator();
         matrix = new JTable();
         setLayout(new BorderLayout());
+        gen.generate(DEFAULT_NUMBER_OF_VERTEXS);
         Visualizator.fillMatrix(matrix, gen.getGraph());
         JScrollPane scrl = new JScrollPane(matrix);
         add(scrl, BorderLayout.CENTER);
@@ -44,13 +51,37 @@ public class Application extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         add(buttonPanel, BorderLayout.SOUTH);
 
+        JLabel inputLabel = new JLabel("Enter number of vertexs: ");
+        buttonPanel.add(inputLabel);
+
+        final JTextField edit = new JTextField(DEFAULT_NUMBER_OF_VERTEXS.toString());
+        edit.setPreferredSize(new Dimension(50, 20));
+        edit.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() < '0' || e.getKeyChar() > '9') {
+                    e.consume();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+        });
+        buttonPanel.add(edit);
+
         JButton genBtn = new JButton("Generate");
         genBtn.addActionListener(new ActionListener() {
 
             // по нажатию кнопки будет запускаться перегенерация графа
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                gen.generate();
+                gen.generate(Integer.parseInt(edit.getText()));
                 Visualizator.fillMatrix(matrix, gen.getGraph());
                 img.setIcon(Visualizator.createImage(gen.getGraph()));
             }

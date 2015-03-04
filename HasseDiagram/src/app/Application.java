@@ -6,14 +6,18 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
@@ -30,9 +34,7 @@ public class Application extends JFrame {
 	JTextArea input;
 	JLabel img;
 
-	private static Integer DEFAULT_NUMBER_OF_VERTEXS = 5;
-
-	private HyperGraph hyperGraph = new HyperGraph(DEFAULT_NUMBER_OF_VERTEXS);
+	private HyperGraph hyperGraph = new HyperGraph(0);
 
 	public Application() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,16 +83,86 @@ public class Application extends JFrame {
 				int returnVal = fc.showOpenDialog(Application.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					hyperGraph = HyperGraph.readFromFile(file);
-					input.setText(hyperGraph.toString());
-					img.setIcon(Visualizator.createImage(hyperGraph));
+					try {
+						File file = fc.getSelectedFile();
+						hyperGraph = HyperGraph.readFromFile(file);
+						input.setText(hyperGraph.toString());
+						img.setIcon(Visualizator.createImage(hyperGraph));
+					} catch (Exception e) {
+						String text = "Error while reading";
+						if (e instanceof NumberFormatException) {
+							text = "File content is incorrect";
+						} else if (e instanceof FileNotFoundException) {
+							text = "File not found";
+						}
+						JOptionPane.showMessageDialog(Application.this, text,
+								"Warning", JOptionPane.WARNING_MESSAGE);
+					}
+
 				}
 			}
 		});
 		buttonPanel.add(open);
-		
-		
+
+		buttonPanel.add(new JLabel("|"));
+
+		JButton saveGraph = new JButton("Save to text");
+		saveGraph.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				// Handle open button action.
+				int returnVal = fc.showSaveDialog(Application.this);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					addFileExtIfNecessary(fc.getSelectedFile().getName(),
+							".txt");
+					File file = fc.getSelectedFile();
+					try {
+						file.createNewFile();
+						PrintWriter p = new PrintWriter(file);
+						hyperGraph.printToFile(p);
+						p.close();
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(Application.this,
+								"WARNING.", "Warning",
+								JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			}
+		});
+		buttonPanel.add(saveGraph);
+
+		JButton saveImage = new JButton("Save image");
+		saveImage.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showSaveDialog(Application.this);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					addFileExtIfNecessary(fc.getSelectedFile().getName(),
+							".txt");
+					File file = fc.getSelectedFile();
+					try {
+						file.createNewFile();
+						PrintWriter p = new PrintWriter(file);
+						ImageIO.write(Visualizator.getImage(hyperGraph), "jpg",
+								file);
+
+						p.close();
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(Application.this,
+								"WARNING.", "Warning",
+								JOptionPane.WARNING_MESSAGE);
+					}
+				}
+
+			}
+		});
+		buttonPanel.add(saveImage);
 
 		img = new JLabel();
 		img.setIcon(Visualizator.createImage(hyperGraph));
@@ -99,6 +171,13 @@ public class Application extends JFrame {
 		add(scrl2, BorderLayout.EAST);
 
 		pack();
+	}
+
+	public String addFileExtIfNecessary(String file, String ext) {
+		if (file.lastIndexOf('.') == -1)
+			file += ext;
+
+		return file;
 	}
 
 	public static void main(String[] args) {

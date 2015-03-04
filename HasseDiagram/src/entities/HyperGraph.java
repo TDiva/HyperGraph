@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,16 +81,17 @@ public class HyperGraph {
 		return null;
 	}
 
-	public static HyperGraph readFromFile(File file) {
+	public static HyperGraph readFromFile(File file) throws FileNotFoundException {
 		BufferedReader r;
-		try {
-			r = new BufferedReader(new FileReader(file));
-			return read(r);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		r = new BufferedReader(new FileReader(file));
+		return read(r);
+	}
+
+	public void printToFile(PrintWriter w) {
+		w.println(v);
+		for (Edge edge : e) {
+			w.println(edge.toString());
 		}
-		return null;
 	}
 
 	public String toString() {

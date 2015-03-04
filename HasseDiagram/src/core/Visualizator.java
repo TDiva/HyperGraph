@@ -19,10 +19,11 @@ public class Visualizator {
 	public static final int WIDTH_GAP = 50;
 	public static final int HEIGHT_GAP = 60;
 
-	public static ImageIcon createImage(HyperGraph graph) {
+	public static BufferedImage getImage(HyperGraph graph) {
 		int width = 450;
 		int height = 420;
-		Image img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
 
 		Graphics g = img.getGraphics();
 		g.setColor(Color.WHITE);
@@ -48,6 +49,11 @@ public class Visualizator {
 			}
 		}
 
+		return img;
+	}
+
+	public static ImageIcon createImage(HyperGraph graph) {
+		Image img = getImage(graph);
 		return new ImageIcon(img);
 	}
 

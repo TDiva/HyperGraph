@@ -1,38 +1,26 @@
 package entities;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Queue;
 
-/*
- * Класс гиперграфа
- */
 public class HyperGraph {
 
-	protected List<Integer> matrix;
+	protected List<Edge> e;
 	protected int v;
 
 	public HyperGraph(int v) {
-		matrix = new ArrayList<Integer>();
+		e = new ArrayList<Edge>();
 		this.v = v;
-	}
-
-	public HyperGraph(int v, int r) {
-		this.v = v;
-		matrix = new ArrayList<Integer>();
-		for (int i = 0; i < r; i++) {
-			matrix.add(0);
-		}
-	}
-
-	public List<Integer> getMatrix() {
-		return matrix;
-	}
-
-	public void setMatrix(List<Integer> matrix) {
-		this.matrix = matrix;
 	}
 
 	public int getV() {
@@ -43,119 +31,153 @@ public class HyperGraph {
 		this.v = v;
 	}
 
+	public List<Edge> getE() {
+		return e;
+	}
+
+	public void setE(List<Edge> e) {
+		this.e = e;
+	}
+
 	public int getR() {
-		return matrix.size();
+		return e.size();
 	}
 
-	// добавляем ребро: list - список номеров вершин
-	public void addEdge(List<Integer> list) {
-		if (list.size() < 2)
-			return;
-		int row = 0;
-		// кодируем его: в числе на i-ой позиции в двоичном коде стоит единица,
-		// если i-ая вершина взоди в ребро и 0 - если нет
-		for (int i = v - 1; i >= 0; i--) {
-			if (list.contains(i)) {
-				row = row * 2 + 1;
-			} else {
-				row *= 2;
-			}
-		}
-		matrix.add(row);
+	public void addEdge(Edge e) {
+		this.e.add(e);
 	}
 
-	// добавляем уже закодированное ребро
-	public void addEdge(int edge) {
-		matrix.add(edge);
-	}
-
-	// удаляем ребро по индексу
 	public void removeEdge(int index) {
-		matrix.remove(index);
+		e.remove(index);
 	}
 
-	// переводит список ребер в двумерный массив - для визуализации в таблицу
-	public Integer[][] toArray() {
-		Integer[][] arr = new Integer[getR()][];
-		for (int i = 0; i < getR(); i++) {
-			arr[i] = new Integer[v];
-		}
+	public Edge getEdge(int index) {
+		return e.get(index);
+	}
 
-		for (int i = 0; i < matrix.size(); i++) {
-			int row = matrix.get(i);
-			for (int j = 0; j < v; j++, row /= 2) {
-				arr[i][j] = row % 2;
+	public static HyperGraph readFromString(String text) {
+		BufferedReader r = new BufferedReader(new StringReader(text));
+		return read(r);
+	}
+
+	private static HyperGraph read(BufferedReader r) {
+		String line;
+		try {
+			line = r.readLine();
+			Integer v = Integer.valueOf(line);
+			HyperGraph hyperGraph = new HyperGraph(v);
+
+			while ((line = r.readLine()) != null) {
+				Edge e = new Edge(line);
+				hyperGraph.addEdge(e);
 			}
-		}
 
-		return arr;
+			return hyperGraph;
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return null;
 	}
 
-	// проверяет, можно ли на доступном множестве вешин v (закодировано)
-	// построить ребро е
-	// то есть все ли вершины, находящиеся в e принадлежат и v
-	private boolean isEdgeBasedOnVertexs(int e, int v) {
-		for (; e > 0; v /= 2, e /= 2) {
-			if (e % 2 == 1 && v % 2 == 0)
+	public static HyperGraph readFromFile(File file) {
+		BufferedReader r;
+		try {
+			r = new BufferedReader(new FileReader(file));
+			return read(r);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer(v + "\n");
+		for (Edge edge : e) {
+			sb.append(edge.toString() + "\n");
+		}
+		return sb.toString();
+	}
+
+	public boolean isCorrect() {
+		for (Edge edge : e) {
+			if (edge.getDegree() < 2) {
 				return false;
+			}
 		}
 		return true;
 	}
 
-	// если ребро содержит одну вершину - это уже не ребро :D
-	public boolean isSingleEdge(int k) {
-		int edge = matrix.get(k);
-		int count = 0;
-		for (int i = edge; i > 0; i /= 2) {
-			count += i % 2;
+	// первое условие
+	public boolean hasDoubleEdge() {
+		for (Edge edge : e) {
+			if (edge.getDegree() == 2) {
+				return true;
+			}
 		}
-		return (count < 2);
+		return false || e.isEmpty();
 	}
 
-	// проверяем, содержит ли ребро 2 вершины, то есть можно ли его стянуть
-	protected boolean isDoubleEdge(int k) {
-		int edge = matrix.get(k);
-		int count = 0;
-		for (int i = edge; i > 0; i /= 2) {
-			count += i % 2;
-		}
-		return (count == 2);
-	}
+	// второе условие
+	public boolean isClose() {
+		if (v == 1)
+			return true;
+		Boolean p[] = new Boolean[v];
+		Arrays.fill(p, false);
 
-	public static HyperGraph readFromFile(File file) {
-		try {
-			Scanner s = new Scanner(file);
-
-			int v = s.nextInt();
-			int r = s.nextInt();
-			HyperGraph h = new HyperGraph(v);
-			for (int i = 0; i < r; i++) {
-				List<Integer> edge = new ArrayList<>();
-				for (int j = 0; j < v; j++) {
-					if (s.nextInt() == 1) {
-						edge.add(j);
+		Integer v = 1;
+		Queue<Integer> q = new LinkedList<>();
+		q.add(v);
+		do {
+			v = q.poll();
+			for (Edge edge : e) {
+				if (edge.containsVertex(v)) {
+					for (Integer u : edge.getVertexs()) {
+						if (!p[u - 1]) {
+							q.add(u);
+							p[u - 1] = true;
+						}
 					}
 				}
-				if (edge.size() > 1) {
-					h.addEdge(edge);
-				}
 			}
-			return h;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
 
+		} while (!q.isEmpty());
+
+		boolean flag = true;
+		for (int i = 0; i < p.length; i++) {
+			flag &= p[i];
+		}
+		return flag;
 	}
 
-	public void printToLog() {
-		Integer[][] arr = toArray();
-		for (int i = 0; i < getR(); i++) {
-			for (int j = 0; j < getV(); j++) {
-				System.out.print(arr[i][j] + " ");
+	// третье условие
+	public boolean isCorrectVertexs() {
+		return (getV() == getR() + 1) || getV() == 0;
+	}
+
+	public List<SubGraph> getSSubGraphs() {
+		List<SubGraph> list = new ArrayList<>();
+
+		for (int i = 0; i < Math.pow(2d, v); i++) {
+			List<Integer> vertexs = new ArrayList<>();
+			int x = i;
+			int index = 1;
+			while (x > 0) {
+				if (x % 2 == 1) {
+					vertexs.add(index);
+				}
+				x /= 2;
+				index++;
 			}
-			System.out.println();
+			SubGraph sg = new SubGraph(vertexs, this);
+
+			if (sg.isScreed()) {
+				list.add(sg);
+			}
 		}
+		Collections.sort(list);
+		return list;
 	}
 
 }

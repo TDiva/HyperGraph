@@ -54,13 +54,19 @@ public class SubGraph extends HyperGraph implements Comparable<SubGraph> {
 		}
 		return this.getV() - o.getV();
 	}
+	
+	public boolean contains(SubGraph s) {
+		return baseVertexs.containsAll(s.baseVertexs);
+	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		for (Integer v : baseVertexs) {
-			sb.append(v + " ");
-		}
-		return sb.toString();
+//		StringBuffer sb = new StringBuffer("[");
+//		for (Integer v : baseVertexs) {
+//			sb.append(v + ",");
+//		}
+//		sb.append("]");
+//		return sb.toString();
+		return baseVertexs.toString();
 	}
 
 }

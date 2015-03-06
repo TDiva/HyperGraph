@@ -9,7 +9,7 @@ class Point {
 	public int x;
 	public int y;
 	
-	public SubGraph s;
+	public SubGraph s;	
 	
 	public Point() {
 		x = 0;
@@ -51,5 +51,9 @@ class Point {
 	public void move(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+	
+	public void move(int x) {
+		this.x = x;
 	}
 }

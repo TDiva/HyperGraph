@@ -62,7 +62,7 @@ public class Application extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String text = input.getText();
 				hyperGraph = HyperGraph.readFromString(text);
-				img.setIcon(Visualizator.createImage(hyperGraph));
+				img.setIcon(Visualizator.createImageIcon(hyperGraph));
 			}
 		});
 		buttonPanel.add(apply);
@@ -86,7 +86,7 @@ public class Application extends JFrame {
 						File file = fc.getSelectedFile();
 						hyperGraph = HyperGraph.readFromFile(file);
 						input.setText(hyperGraph.toString());
-						img.setIcon(Visualizator.createImage(hyperGraph));
+						img.setIcon(Visualizator.createImageIcon(hyperGraph));
 					} catch (Exception e) {
 						String text = "Error while reading";
 						if (e instanceof NumberFormatException) {
@@ -165,7 +165,7 @@ public class Application extends JFrame {
 		buttonPanel.add(saveImage);
 
 		img = new JLabel();
-		img.setIcon(Visualizator.createImage(hyperGraph));
+		img.setIcon(Visualizator.getImageIcon(hyperGraph));
 		JScrollPane scrl2 = new JScrollPane(img);
 		scrl2.setPreferredSize(new Dimension(460, 430));
 		add(scrl2, BorderLayout.EAST);

@@ -18,8 +18,31 @@ public class Visualizator {
 
 	public static final int WIDTH_GAP = 50;
 	public static final int HEIGHT_GAP = 60;
+	
+	public static List<Point> points;
+	public static int width;
+	public static int height;
+	
+	public static BufferedImage createImage(HyperGraph h) {
+		BufferedImage img = getDefaultImage(h);
+		if (img == null) {
+			img = createHasseDiagram(h);
+		}
+		return img;
+	}
+	
+	public static BufferedImage getImage(HyperGraph h) {
+		BufferedImage img = getDefaultImage(h);
+		if (img == null) {
+			img = getHasseDiagram();
+		}
+		
+		return img;
+	}
+	
+	
 
-	public static BufferedImage getImage(HyperGraph graph) {
+	public static BufferedImage getDefaultImage(HyperGraph graph) {
 		int width = 450;
 		int height = 420;
 		BufferedImage img = new BufferedImage(width, height,
@@ -45,51 +68,29 @@ public class Visualizator {
 				g.drawString("Third condition: E != V - 1", width / 2 - 50,
 						height / 2);
 			} else {
-				img = drawHasseDiagram(graph);
+				img = null;
 			}
 		}
 
 		return img;
 	}
 
-	public static ImageIcon createImage(HyperGraph graph) {
+	public static ImageIcon getImageIcon(HyperGraph graph) {
 		Image img = getImage(graph);
 		return new ImageIcon(img);
 	}
-
-	private static BufferedImage drawHasseDiagram(HyperGraph h) {
-		Map<Integer, List<SubGraph>> map = getLayers(h);
-		int layers = map.size();
-		int maxN = 0;
-		for (Integer i : map.keySet()) {
-			if (map.get(i).size() > maxN) {
-				maxN = map.get(i).size();
-			}
-		}
-
-		int height = layers < 7 ? 420 : layers * HEIGHT_GAP;
-		int width = maxN < 9 ? 450 : maxN * WIDTH_GAP;
-
+	
+	public static ImageIcon createImageIcon(HyperGraph h) {
+		return new ImageIcon(createImage(h));
+	}
+	
+	public static BufferedImage getHasseDiagram() {
 		BufferedImage img = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 		Graphics g = img.getGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
-
-		List<Point> points = new ArrayList<>();
-		int index = 0;
-		for (Integer i : map.keySet()) {
-			int layerY = (int) ((0.5 + index++) * HEIGHT_GAP);
-
-			List<SubGraph> list = map.get(i);
-			int dx = width / list.size();
-
-			for (int j = 0; j < list.size(); j++) {
-				Point p = new Point((int) ((j + 0.5) * dx), layerY, list.get(j));
-				points.add(p);
-			}
-		}
-
+		
 		for (Point p : points) {
 			for (Point q : points) {
 				if (p.equals(q)) {
@@ -117,13 +118,34 @@ public class Visualizator {
 		return img;
 	}
 
-	@SuppressWarnings("unused")
-	private static void printSgraphsMap(HyperGraph h, Graphics g) {
+	private static BufferedImage createHasseDiagram(HyperGraph h) {
 		Map<Integer, List<SubGraph>> map = getLayers(h);
-		int i = 0;
-		for (List<SubGraph> list : map.values()) {
-			g.drawString(list.toString(), 10, i++ * 20 + 10);
+		int layers = map.size();
+		int maxN = 0;
+		for (Integer i : map.keySet()) {
+			if (map.get(i).size() > maxN) {
+				maxN = map.get(i).size();
+			}
 		}
+
+		height = layers < 7 ? 420 : layers * HEIGHT_GAP;
+		width = maxN < 9 ? 450 : maxN * WIDTH_GAP;
+
+		points = new ArrayList<>();
+		int index = 0;
+		for (Integer i : map.keySet()) {
+			int layerY = (int) ((0.5 + index++) * HEIGHT_GAP);
+
+			List<SubGraph> list = map.get(i);
+			int dx = width / list.size();
+
+			for (int j = 0; j < list.size(); j++) {
+				Point p = new Point((int) ((j + 0.5) * dx), layerY, list.get(j));
+				points.add(p);
+			}
+		}
+
+		return getHasseDiagram();
 	}
 
 	private static Map<Integer, List<SubGraph>> getLayers(HyperGraph h) {
@@ -141,13 +163,5 @@ public class Visualizator {
 		return map;
 	}
 
-	@SuppressWarnings("unused")
-	private static void printSSubGraphs(HyperGraph graph, Graphics g) {
-		List<SubGraph> list = graph.getSSubGraphs();
-		for (int i = 0; i < list.size(); i++) {
-			g.drawString(list.get(i).toString(), 10, i * 20 + 10);
-		}
-
-	}
 
 }

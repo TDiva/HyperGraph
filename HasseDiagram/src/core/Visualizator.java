@@ -18,29 +18,47 @@ public class Visualizator {
 
 	public static final int WIDTH_GAP = 50;
 	public static final int HEIGHT_GAP = 60;
-	
+
 	public static List<Point> points;
 	public static int width;
 	public static int height;
-	
+
+	public static Point getPoint(int x, int y) {
+		if (points == null || points.isEmpty()) {
+			return null;
+		}
+		Point clicked = new Point(x, y);
+		for (Point p : points) {
+			if (clicked.isClose(p)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public static List<Point> getPoints() {
+		return points;
+	}
+
 	public static BufferedImage createImage(HyperGraph h) {
 		BufferedImage img = getDefaultImage(h);
 		if (img == null) {
 			img = createHasseDiagram(h);
 		}
+		for (Point p : points) {
+			System.out.println(p);
+		}
 		return img;
 	}
-	
+
 	public static BufferedImage getImage(HyperGraph h) {
 		BufferedImage img = getDefaultImage(h);
 		if (img == null) {
 			img = getHasseDiagram();
 		}
-		
+
 		return img;
 	}
-	
-	
 
 	public static BufferedImage getDefaultImage(HyperGraph graph) {
 		int width = 450;
@@ -79,18 +97,18 @@ public class Visualizator {
 		Image img = getImage(graph);
 		return new ImageIcon(img);
 	}
-	
+
 	public static ImageIcon createImageIcon(HyperGraph h) {
 		return new ImageIcon(createImage(h));
 	}
-	
+
 	public static BufferedImage getHasseDiagram() {
 		BufferedImage img = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 		Graphics g = img.getGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
-		
+
 		for (Point p : points) {
 			for (Point q : points) {
 				if (p.equals(q)) {
@@ -162,6 +180,5 @@ public class Visualizator {
 
 		return map;
 	}
-
 
 }

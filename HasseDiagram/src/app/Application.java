@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import core.Point;
 import core.Visualizator;
 import entities.HyperGraph;
 
@@ -30,6 +33,8 @@ public class Application extends JFrame {
 
 	JTextArea input;
 	JLabel img;
+
+	Point selected = null;
 
 	private HyperGraph hyperGraph = new HyperGraph(0);
 
@@ -169,6 +174,44 @@ public class Application extends JFrame {
 		JScrollPane scrl2 = new JScrollPane(img);
 		scrl2.setPreferredSize(new Dimension(460, 430));
 		add(scrl2, BorderLayout.EAST);
+
+		img.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (selected != null) {
+					int x = e.getX();
+					int y = e.getY();
+					selected.move(x, y);
+					selected = null;
+					img.setIcon(Visualizator.getImageIcon(hyperGraph));
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+				selected = Visualizator.getPoint(x, y);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 		pack();
 	}

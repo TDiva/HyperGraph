@@ -60,12 +60,9 @@ public class SubGraph extends HyperGraph implements Comparable<SubGraph> {
 	}
 
 	public String toString() {
-//		StringBuffer sb = new StringBuffer("[");
-//		for (Integer v : baseVertexs) {
-//			sb.append(v + ",");
-//		}
-//		sb.append("]");
-//		return sb.toString();
+		if (baseVertexs.isEmpty()) {
+			return "  [   ]";
+		}
 		return baseVertexs.toString();
 	}
 

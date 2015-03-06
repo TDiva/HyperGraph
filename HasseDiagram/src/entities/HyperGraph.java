@@ -65,7 +65,7 @@ public class HyperGraph {
 		String line;
 		try {
 			line = r.readLine();
-			Integer v = Integer.valueOf(line);
+			Integer v = line == null ? 0 : Integer.valueOf(line);
 			HyperGraph hyperGraph = new HyperGraph(v);
 
 			while ((line = r.readLine()) != null) {
@@ -118,7 +118,7 @@ public class HyperGraph {
 				return true;
 			}
 		}
-		return false || e.isEmpty();
+		return false || v < 2;
 	}
 
 	// второе условие

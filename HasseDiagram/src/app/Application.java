@@ -20,14 +20,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import core.Visualizator;
 import entities.HyperGraph;
 
-/* ќсновной класс приложени€
- * Ќаследуетс€ от JFrame, то есть представл€ет собой основное окно приложени€.
- * 
- */
 public class Application extends JFrame {
 	private static final long serialVersionUID = 1L;
 
@@ -79,7 +76,9 @@ public class Application extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				JFileChooser fc = new JFileChooser();
-				// Handle open button action.
+				fc.setFileFilter(new FileNameExtensionFilter("TEXT file", "txt"));
+				fc.setAcceptAllFileFilterUsed(false);
+
 				int returnVal = fc.showOpenDialog(Application.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -112,13 +111,13 @@ public class Application extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
-				// Handle open button action.
 				int returnVal = fc.showSaveDialog(Application.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					addFileExtIfNecessary(fc.getSelectedFile().getName(),
-							".txt");
-					File file = fc.getSelectedFile();
+					String name = addFileExtIfNecessary(fc.getSelectedFile()
+							.getPath(), ".txt");
+					File file = new File(name);
+
 					try {
 						file.createNewFile();
 						PrintWriter p = new PrintWriter(file);
@@ -143,9 +142,10 @@ public class Application extends JFrame {
 				int returnVal = fc.showSaveDialog(Application.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					addFileExtIfNecessary(fc.getSelectedFile().getName(),
-							".txt");
-					File file = fc.getSelectedFile();
+					String name = addFileExtIfNecessary(fc.getSelectedFile()
+							.getPath(), ".jpg");
+					File file = new File(name);
+
 					try {
 						file.createNewFile();
 						PrintWriter p = new PrintWriter(file);

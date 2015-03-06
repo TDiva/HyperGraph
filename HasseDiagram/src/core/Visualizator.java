@@ -30,7 +30,7 @@ public class Visualizator {
 		g.fillRect(0, 0, width, height);
 
 		g.setColor(Color.BLACK);
-		if (graph.getR() > 0) {
+		if (graph.getV() > 0) {
 			if (!graph.isCorrect()) {
 				g.drawString("Hypergraph is incorrect!", width / 2 - 50,
 						height / 2);

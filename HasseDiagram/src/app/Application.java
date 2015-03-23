@@ -182,7 +182,7 @@ public class Application extends JFrame {
 				if (selected != null) {
 					int x = e.getX();
 					int y = e.getY();
-					selected.move(x, y);
+					selected.move(x, selected.y);
 					selected = null;
 					img.setIcon(Visualizator.getImageIcon(hyperGraph));
 				}

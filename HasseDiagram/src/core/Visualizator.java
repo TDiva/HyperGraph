@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,9 +45,6 @@ public class Visualizator {
 		BufferedImage img = getDefaultImage(h);
 		if (img == null) {
 			img = createHasseDiagram(h);
-		}
-		for (Point p : points) {
-			System.out.println(p);
 		}
 		return img;
 	}
@@ -151,7 +149,9 @@ public class Visualizator {
 
 		points = new ArrayList<>();
 		int index = 0;
-		for (Integer i : map.keySet()) {
+		List<Integer> l = new ArrayList<>(map.keySet());
+		Collections.sort(l, Collections.reverseOrder());
+		for (Integer i : l) {
 			int layerY = (int) ((0.5 + index++) * HEIGHT_GAP);
 
 			List<SubGraph> list = map.get(i);

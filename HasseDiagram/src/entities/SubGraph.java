@@ -6,8 +6,10 @@ import java.util.List;
 
 public class SubGraph extends HyperGraph implements Comparable<SubGraph> {
 
+//	вершины, на которых строится подграф
 	private List<Integer> baseVertexs;
 
+//	строим индуцированный подграф
 	public SubGraph(List<Integer> vertexs, HyperGraph h) {
 		super(vertexs.size());
 		baseVertexs = vertexs;
@@ -29,20 +31,24 @@ public class SubGraph extends HyperGraph implements Comparable<SubGraph> {
 		}
 	}
 
+//	задать вершины, на которых строится подграф
 	public List<Integer> getBaseVertexs() {
 		return baseVertexs;
 	}
 
+//	задать вершины, на которых строится подграф
 	public void setBaseVertexs(List<Integer> baseVertexs) {
 		this.baseVertexs = baseVertexs;
 	}
 
+//	является ли стягиваемым
 	public boolean isScreed() {
 		// TODO: это необходимые, а не достаточные условия
-		return isCorrect() && hasDoubleEdge() && isClose()
+		return !hasErrors() && hasDoubleEdge() && isClose()
 				&& isCorrectVertexs();
 	}
 
+//	сравнить подграфы
 	@Override
 	public int compareTo(SubGraph o) {
 		if (this.getV() == o.getV()) {
@@ -55,13 +61,15 @@ public class SubGraph extends HyperGraph implements Comparable<SubGraph> {
 		return this.getV() - o.getV();
 	}
 	
+//	проверяем является ли один подграф подграфом другого
 	public boolean contains(SubGraph s) {
 		return baseVertexs.containsAll(s.baseVertexs);
 	}
 
+//	текстовое представление
 	public String toString() {
 		if (baseVertexs.isEmpty()) {
-			return "  [   ]";
+			return "[]";
 		}
 		return baseVertexs.toString();
 	}
